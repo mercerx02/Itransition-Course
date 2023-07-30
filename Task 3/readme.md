@@ -49,4 +49,4 @@ This is a command-line implementation of the Rock-Paper-Scissors game in Python.
 
 8. The result of the game is displayed, indicating whether the user won, lost, or it was a draw.
 
-9. The HMAC key is shown again for verification.
+9. The HMAC key is shown for verification.
