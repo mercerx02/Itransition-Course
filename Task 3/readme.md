@@ -1,6 +1,6 @@
-# Rock-Paper-Scissors Game
+# General Non-Transitive One-Move Game.
 
-This is a command-line implementation of the Rock-Paper-Scissors game in Python. The game allows you to play against the computer by selecting one of the available moves and then determining the winner based on the rules of the game.
+This is a command-line implementation of the General Non-Transitive one-move game in Python. The game allows you to play against the computer by selecting one of the available moves and then determining the winner based on the rules of the game.
 
 ## Requirements
 
