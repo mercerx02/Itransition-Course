@@ -35,7 +35,7 @@ This is a command-line implementation of the General Non-Transitive one-move gam
 
 1. The computer generates a cryptographic key (HMAC key) using a secure random generator.
 
-2. The computer generate HMAC based on the computer's choice(HMAC key + computer choice)
+2. The computer generates a HMAC based on the computer's choice(HMAC key + computer choice)
 
 3. The HMAC is displayed for verification purposes.
 
