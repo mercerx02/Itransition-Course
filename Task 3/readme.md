@@ -1,6 +1,6 @@
-# Rock-Paper-Scissors Game
+# General Non-Transitive One-Move Game.
 
-This is a command-line implementation of the Rock-Paper-Scissors game in Python. The game allows you to play against the computer by selecting one of the available moves and then determining the winner based on the rules of the game.
+This is a command-line implementation of the General Non-Transitive one-move game in Python. The game allows you to play against the computer by selecting one of the available moves and then determining the winner based on the rules of the game.
 
 ## Requirements
 
@@ -35,7 +35,7 @@ This is a command-line implementation of the Rock-Paper-Scissors game in Python.
 
 1. The computer generates a cryptographic key (HMAC key) using a secure random generator.
 
-2. The computer generate HMAC based on the computer's choice(HMAC key + computer choice)
+2. The computer generates a HMAC based on the computer's choice(HMAC key + computer choice)
 
 3. The HMAC is displayed for verification purposes.
 
@@ -49,4 +49,4 @@ This is a command-line implementation of the Rock-Paper-Scissors game in Python.
 
 8. The result of the game is displayed, indicating whether the user won, lost, or it was a draw.
 
-9. The HMAC key is shown again for verification.
+9. The HMAC key is shown for verification.
