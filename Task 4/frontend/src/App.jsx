@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
-import DashBoard from './components/DashBoard'
-import NavBar from './components/NavBar'
-
+import Application from './components/Application'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LoginForm from './components/LoginForm';
+import PrivateRoute from './components/PrivateRoute.jsx';
 const users = [
   { id: 1, name: 'Alex', email: 'laptonik322@mail.ru', registration_date: '2023-07-31', last_login_date: '2023-07-31', status: 'Active' },
   { id: 2, name: 'Alice', email: 'laptonik321@mail.ru', registration_date: '2023-02-31', last_login_date: '2023-07-31', status: 'Active' },
@@ -23,6 +24,7 @@ function getUsers() {
 
 function App() {
   const [users, setUsers] = useState(() => getUsers())
+  const [loggedUser, setLoggedUser] = useState(() => localStorage.getItem('username'))
 
   const setCheckBox = (id) => {
     setUsers(users.map((user) => {
@@ -70,8 +72,19 @@ function App() {
   }
   return (
     <>
-      <NavBar></NavBar>
-      <DashBoard setStatusAllUsers={setStatusAllUsers} deleteUsers={deleteUsers} unBanUsers={unBanUsers} banUsers={banUsers} setCheckBox={setCheckBox} users={users}></DashBoard>
+
+      {/* <NavBar></NavBar>
+      <DashBoard setStatusAllUsers={setStatusAllUsers} deleteUsers={deleteUsers} unBanUsers={unBanUsers} banUsers={banUsers} setCheckBox={setCheckBox} users={users}></DashBoard> */}
+      <Router>
+        <Routes>
+          <Route element={<PrivateRoute></PrivateRoute>}>
+            <Route exact path='/' element={<Application loggedUser={loggedUser} setStatusAllUsers={setStatusAllUsers} deleteUsers={deleteUsers} unBanUsers={unBanUsers} banUsers={banUsers} setCheckBox={setCheckBox} users={users}></Application>}></Route>
+          </Route>
+
+          <Route path='/login' element={<LoginForm setLoggedUser={setLoggedUser}></LoginForm>}></Route>
+
+        </Routes>
+      </Router>
     </>
   )
 }

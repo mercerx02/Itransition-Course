@@ -1,19 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 
-const NavBar = () => {
+const Navbar = ({ loggedUser }) => {
+    const cookies = new Cookies();
+
+    const navigate = useNavigate()
+    const logOut = () => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('username')
+        cookies.remove('jwtToken', { path: '/' });
+
+        navigate('/login')
+
+    }
     return (
-        <>
-            <nav className="navbar">
-                <div className="container-fluid">
-                    <a className="navbar-brand">Navbar</a>
-                    <form className="d-flex">
-                        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
-                        <button className="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </div>
-            </nav>
-        </>
-    )
-}
+        <nav className="navbar navbar-expand-lg">
+            <div className="container-fluid">
+                <a className="navbar-brand" href="#">Task 4</a>
 
-export default NavBar
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul className="navbar-nav ms-auto">
+                        <li className="nav-item">
+                            <a className="nav-link" href="#">{loggedUser}</a>
+                        </li>
+                        <li className="nav-item">
+                            <a onClick={() => logOut()} className="nav-link" href="#">Log Out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    );
+};
+
+export default Navbar;
