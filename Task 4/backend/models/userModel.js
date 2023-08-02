@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema({
     },
     last_login_date: {
         type: Date,
-        required: true
+        required: true,
     },
     is_banned: {
         type: Boolean,
