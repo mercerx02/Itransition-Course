@@ -19,23 +19,21 @@ const LoginForm = ({ setLoggedUser }) => {
             body: JSON.stringify({ email, password }),
         });
         const data = await response.json()
-        if (data.token) {
-            console.log(data)
+        if (response.ok) {
+            if(!data.is_banned){
             setLoggedUser(data.name)
-            console.log(data.token)
             cookies.set('jwtToken', data.token, { path: '/' });
-
-            localStorage.setItem('token', data.token)
             localStorage.setItem('username', data.name)
             navigate('/')
+            }
+            else{
+                alert('Вы заблокированны!')
+            }
 
         }
         else {
             alert('Неправильный логин или пароль!')
         }
-
-
-
 
 
     };
@@ -75,6 +73,9 @@ const LoginForm = ({ setLoggedUser }) => {
                                 <button type="submit" className="btn btn-primary">Войти</button>
                             </form>
                         </div>
+                    </div>
+                    <div className="mt-3 text-center">
+                        <p>Нет аккаунта? <a href="/register">Зарегистрируйтесь</a></p>
                     </div>
                 </div>
             </div>

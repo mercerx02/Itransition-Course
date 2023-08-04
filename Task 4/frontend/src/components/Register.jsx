@@ -1,60 +1,85 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function Register() {
+
+
+const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
     const navigate = useNavigate()
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
+        const response = await fetch('http://localhost:5000/api/users/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, email, password}),
+        });
+        if (response.ok) {
+            alert('Вы успешно зарегистрировались!')
+            navigate('/login')
 
-        try {
-            const response = await axios.post('/api/users/register', {
-                name,
-                email,
-                password,
-            });
-
-            const { _id, name: userName, email: userEmail, token } = response.data;
-
-            localStorage.setItem('userInfo', JSON.stringify({ _id, name: userName, email: userEmail, token }));
-            history.push('/');
-        } catch (error) {
-            setError('User already exists');
         }
+        else {
+            alert('Неправильный логин или пароль!')
+        }
+
     };
 
     return (
-        <div>
-            <h2>Register</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <button type="submit">Register</button>
-                {error && <p>{error}</p>}
-            </form>
+        <div className="container mt-5">
+            <div className="row justify-content-center">
+                <div className="col-md-6">
+                    <div className="card">
+                        <div className="card-body">
+                            <h5 className="card-title">Регистрация аккаунта</h5>
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label htmlFor="name" className="form-label">Имя</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="name"
+                                        placeholder="Введите ваше имя"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="email" className="form-label">Email адрес</label>
+                                    <input
+                                        type="email"
+                                        className="form-control"
+                                        id="email"
+                                        placeholder="Введите ваш email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="password" className="form-label">Пароль</label>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        id="password"
+                                        placeholder="Введите пароль"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <button type="submit" className="btn btn-primary">Зарегистрироваться</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
-}
+};
 
 export default Register;

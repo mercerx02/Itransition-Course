@@ -1,16 +1,41 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
-const PrivateRoute = () => {
-    const token = localStorage.getItem('token')
-    const cookies = new Cookies()
-    console.log('Токен из кук: ', cookies.get('jwtToken'))
 
-    return (
-        token ? <Outlet></Outlet> : <Navigate to="/login"></Navigate>
-    )
+
+const PrivateRoute = () => {
+    const cookies = new Cookies()
+    const jwt_token = cookies.get('jwtToken')
+    const [verificationStatus, setVerificationStatus] = useState('pending');
+    const navigate = useNavigate()
+    useEffect(() => {
+        fetch('http://localhost:5000/api/users/verify', {
+            method: 'POST',
+            headers: {
+                Authorization: jwt_token,
+            },
+        })
+        .then(response => {
+            if(response.ok){
+                setVerificationStatus('verified')
+            }
+            else{
+                throw new Error('Ошибка')
+            }
+        })
+        .catch((error) => {
+            navigate('/login')
+        });
+    }, []);
+
+    if (verificationStatus === 'pending') {
+    } else if (verificationStatus === 'verified') {
+        return <Outlet />;
+    } else {
+        return <Navigate to="/login" />;
+    }
 
 
 };

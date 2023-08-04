@@ -7,7 +7,6 @@ const Navbar = ({ loggedUser }) => {
 
     const navigate = useNavigate()
     const logOut = () => {
-        localStorage.removeItem('token')
         localStorage.removeItem('username')
         cookies.remove('jwtToken', { path: '/' });
 

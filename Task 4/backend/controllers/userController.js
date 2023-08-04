@@ -4,35 +4,56 @@ const asyncHandler = require('express-async-handler')
 const moment = require('moment-timezone')
 const User = require('../models/userModel')
 
-// @desc Get Users
-// @route GET /api/users
-// @access Private
+
+
+
 const getUsers = asyncHandler(async (req, res) => {
-    res.status(200).json({ message: 'Get Users' })
-})
+    try {
+        const users = await User.find({}, '_id name email last_login_date is_banned createdAt');
+        res.status(200).json(users)
 
-// @desc Update User
-// @route PUT /api/users/:id
-// @access Private
-const updateUser = asyncHandler(async (req, res) => {
-    if (!req.body.key) {
-        res.status(400)
-        throw new Error('Provide a key')
+    } catch (error) {
+        res.status(400).json({message:'Server error'})
+
     }
-    res.status(200).json({ message: `Update user ${req.params.id}` })
 })
 
-// @desc Delete User
-// @route DELETE /api/users/:id
-// @access Private
+
+const updateUser = asyncHandler(async (req, res) => {
+
+    try {
+        const user = await User.findById(req.body.id);
+        if(req.body.action == 'block'){
+            user.is_banned = true
+        }
+        else{
+            user.is_banned = false
+        }
+        const updatedUser = await user.save();
+        res.status(200).json({ message: `Update user ${req.body.id}` })
+
+
+    } catch (error) {
+        console.log(error)
+
+    }
+})
+
+
+
 const deleteUser = asyncHandler(async (req, res) => {
-    res.status(200).json({ message: `Delete user ${req.params.id}` })
+    try {
+        const result = await User.findByIdAndDelete(req.body.id);
+        res.status(200).json({message:`User ${req.body.id} has been delete`})
+
+    } catch (error) {
+        res.status(200).json({message:'Server error'})
+    }
+
 })
 
 
-// @desc Register User
-// @route POST /api/users/
-// @access Public
+
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body
     if (!name || !email || !password) {
@@ -60,8 +81,6 @@ const registerUser = asyncHandler(async (req, res) => {
             _id: user.id,
             name: user.name,
             email: user.email,
-            token: generateToken(user._id)
-
         })
     } else {
         throw new Error('Invalid user data')
@@ -70,9 +89,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 })
 
-// @desc Authenicate User
-// @route POST /api/users/login
-// @access Public
+
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body
     const user = await User.findOne({ email })
@@ -83,6 +100,7 @@ const loginUser = asyncHandler(async (req, res) => {
             _id: user.id,
             name: user.name,
             email: user.email,
+            is_banned: user.is_banned,
             token: token
 
         })
@@ -95,11 +113,30 @@ const loginUser = asyncHandler(async (req, res) => {
 
 })
 
-// @desc Get User data
-// @route GET /api/users/me
-// @access Private
+
+
 const getMe = asyncHandler(async (req, res) => {
     res.status(200).json({ message: `User data` })
+})
+
+const verify = asyncHandler(async (req, res) => {
+    const token = req.headers.authorization;
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const user = await User.findById(decoded.id).select('-password')
+        if (user && !user.is_banned){
+            res.status(200).json(user)
+        }
+        else{
+            res.status(400).json({message:'Invalid jwt token or user is banned'})
+        }
+
+    } catch (error) {
+      res.status(401).json({ message: 'Ошибка при проверке токена' });
+    }
+
+
 })
 
 const generateToken = (id) => {
@@ -114,5 +151,6 @@ module.exports = {
     deleteUser,
     registerUser,
     loginUser,
-    getMe
+    getMe,
+    verify
 }

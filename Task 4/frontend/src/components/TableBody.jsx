@@ -6,7 +6,7 @@ const TableBody = ({ users, setCheckBox }) => {
         <>
             <tbody>
                 {users.map((user) => {
-                    return <TableRow setCheckBox={setCheckBox} key={user.id} user={user}></TableRow>
+                    return <TableRow setCheckBox={setCheckBox} key={user._id} user={user}></TableRow>
                 })}
 
             </tbody>
