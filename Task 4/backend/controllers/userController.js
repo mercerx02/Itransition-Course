@@ -114,11 +114,6 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 
-
-const getMe = asyncHandler(async (req, res) => {
-    res.status(200).json({ message: `User data` })
-})
-
 const verify = asyncHandler(async (req, res) => {
     const token = req.headers.authorization;
 
@@ -151,6 +146,5 @@ module.exports = {
     deleteUser,
     registerUser,
     loginUser,
-    getMe,
     verify
 }
