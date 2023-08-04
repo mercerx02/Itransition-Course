@@ -8,7 +8,6 @@ const LoginForm = ({ setLoggedUser }) => {
     const navigate = useNavigate()
     const cookies = new Cookies();
 
-    cookies.set('jwtToken', 'your-test-token', { path: '/' });
     const handleSubmit = async (e) => {
         e.preventDefault();
         const response = await fetch('http://localhost:5000/api/users/login', {
@@ -21,8 +20,18 @@ const LoginForm = ({ setLoggedUser }) => {
         const data = await response.json()
         if (response.ok) {
             if(!data.is_banned){
+                cookies.set('jwtToken', data.token, { path: '/' });
+
+                await fetch('http://localhost:5000/api/users/', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${cookies.get('jwtToken')}`,
+
+                    },
+                    body: JSON.stringify({id:data._id, action: 'date' }),
+                });
             setLoggedUser(data.name)
-            cookies.set('jwtToken', data.token, { path: '/' });
             localStorage.setItem('username', data.name)
             navigate('/')
             }

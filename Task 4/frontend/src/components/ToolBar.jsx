@@ -13,7 +13,7 @@ const ToolBar = ({ users, setUsers, loggedUser }) => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${cookies.get('jwtToken')}`, // Ваш токен авторизации
+          Authorization: `Bearer ${cookies.get('jwtToken')}`,
 
         },
       };

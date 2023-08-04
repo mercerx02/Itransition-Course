@@ -26,6 +26,9 @@ const updateUser = asyncHandler(async (req, res) => {
         if(req.body.action == 'block'){
             user.is_banned = true
         }
+        else if(req.body.action == 'date'){
+            user.last_login_date = new Date();
+        }
         else{
             user.is_banned = false
         }
