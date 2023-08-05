@@ -19,7 +19,7 @@ const ToolBar = ({ users, setUsers, loggedUser }) => {
       };
 
       if (action === 'block') {
-        await fetch(`http://localhost:5000/api/users`, {
+        await fetch(`https://itransition-task-4.onrender.com/api/users`, {
           ...requestOptions,
           body: JSON.stringify({ id: user._id, action: 'block' }),
         });
@@ -31,14 +31,14 @@ const ToolBar = ({ users, setUsers, loggedUser }) => {
             navigate('/login');
           }
       } else if (action === 'unban') {
-        await fetch(`http://localhost:5000/api/users`, {
+        await fetch(`https://itransition-task-4.onrender.com/api/users`, {
           ...requestOptions,
           body: JSON.stringify({ id: user._id, action: 'unban' }),
         });
 
         updatedUser.status = 'Active';
       } else if (action === 'delete') {
-        await fetch(`http://localhost:5000/api/users`, {
+        await fetch(`https://itransition-task-4.onrender.com/api/users`, {
           ...requestOptions,
           method: 'DELETE',
           body: JSON.stringify({ id: user._id }),

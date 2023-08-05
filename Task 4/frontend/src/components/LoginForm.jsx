@@ -10,7 +10,7 @@ const LoginForm = ({ setLoggedUser }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch('http://localhost:5000/api/users/login', {
+        const response = await fetch('https://itransition-task-4.onrender.com/api/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ const LoginForm = ({ setLoggedUser }) => {
             if(!data.is_banned){
                 cookies.set('jwtToken', data.token, { path: '/' });
 
-                await fetch('http://localhost:5000/api/users/', {
+                await fetch('https://itransition-task-4.onrender.com/api/users/', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
