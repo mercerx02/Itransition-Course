@@ -13,36 +13,6 @@ import Cookies from 'universal-cookie';
 function App() {
   const [users, setUsers] = useState([])
   const [loggedUser, setLoggedUser] = useState(() => localStorage.getItem('username'))
-  const cookies = new Cookies()
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-        try {
-          const response = await fetch('http://localhost:5000/api/users', {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${cookies.get('jwtToken')}`,
-            },
-          });
-            if (response.ok) {
-                const data = await response.json();
-                data.forEach((user)=>{
-                  user.checked = false
-                  user.is_banned ? user.status = 'Blocked' : user.status = 'Active'
-                })
-                setUsers(data);
-
-            }
-        } catch (error) {
-            console.error('Ошибка при загрузке пользователей:', error);
-        }
-    };
-
-    fetchUsers();
-}, []);
-
-
-
 
 
   const setCheckBox = (id) => {
@@ -74,8 +44,8 @@ function App() {
 
       <Router>
         <Routes>
-          <Route element={<PrivateRoute></PrivateRoute>}>
-            <Route exact path='/' element={<Application setUsers={setUsers} loggedUser={loggedUser} setStatusAllUsers={setStatusAllUsers}  setCheckBox={setCheckBox} users={users}></Application>}></Route>
+        <Route Route path="/" element={<PrivateRoute />}>
+        <Route index element={<Application setUsers={setUsers} loggedUser={loggedUser} setStatusAllUsers={setStatusAllUsers} setCheckBox={setCheckBox} users={users} />} />
           </Route>
 
           <Route path='/login' element={<LoginForm setLoggedUser={setLoggedUser}></LoginForm>}></Route>

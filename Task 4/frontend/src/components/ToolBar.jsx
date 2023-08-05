@@ -60,10 +60,11 @@ const ToolBar = ({ users, setUsers, loggedUser }) => {
   const handleUserAction = async (action) => {
     const updatedUsers = await Promise.all(users.map(async (user) => {
       const updatedUser = await updateUserStatus(user, action);
-      return updatedUser || user;
+      return updatedUser;
     }));
 
-    setUsers(updatedUsers.filter(Boolean));
+    const filteredUsers = updatedUsers.filter(Boolean);
+    setUsers(filteredUsers);
   };
 
   return (
