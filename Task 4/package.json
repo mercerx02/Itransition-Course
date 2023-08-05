@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
-    "build":"npm i"
+    "install-server": "cd backend && npm install",
+    "start-server": "cd backend && node app.js",
+    "install-frontend": "cd frontend && npm install",
+    "build-frontend": "cd frontend && npm run build",
+    "start-frontend": "cd frontend && npm run start"
 
   },
   "author": "Vladimir Bykow",
