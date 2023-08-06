@@ -11,7 +11,7 @@ const PrivateRoute = () => {
     const [verificationStatus, setVerificationStatus] = useState('pending');
     const navigate = useNavigate()
     useEffect(() => {
-        fetch('https://itransition-task-4.onrender.com/api/users/verify', {
+        fetch(`${process.env.API_URL}/api/users/verify`, {
             method: 'POST',
             headers: {
                 Authorization: jwt_token,

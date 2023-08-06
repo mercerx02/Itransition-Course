@@ -9,7 +9,7 @@ const Application = ({ users, setCheckBox, setStatusAllUsers, loggedUser , setUs
     useEffect(() => {
       const fetchUsers = async () => {
           try {
-            const response = await fetch('https://itransition-task-4.onrender.com/api/users', {
+            const response = await fetch(`${process.env.API_URL}/api/users`, {
               method: 'GET',
               headers: {
                 Authorization: `Bearer ${cookies.get('jwtToken')}`,
