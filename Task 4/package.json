@@ -7,7 +7,7 @@
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
     "install-server": "cd backend && npm install",
-    "start-server": "cd backend && node app.js",
+    "start-server": "cd backend && node server.js",
     "install-frontend": "cd frontend && npm install",
     "build-frontend": "cd frontend && npm run build",
     "start-frontend": "cd frontend && npm run start"
