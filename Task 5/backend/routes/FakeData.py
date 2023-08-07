@@ -29,7 +29,6 @@ def introduce_errors(data: dict, error_count: float, seed: int, region: str) -> 
         used_alphabet = russian_alphabet
 
     def add_error(s):
-        # 1 - удаление, 2 - добавление, 3 - перестановка
         choice = random.choice([1, 2, 3])
         if choice == 1 and len(s) > 0:
             pos = random.randint(0, len(s) - 1)
@@ -52,7 +51,7 @@ def introduce_errors(data: dict, error_count: float, seed: int, region: str) -> 
     return data
 
 
-def generate_fake_data(seed: int, count: int, page: int, last_index, region: str, update: int, errors: Union[float, int]) -> list[dict]:
+def generate_fake_data(seed: int, count: int, page: int, last_index, region: str, update: int, errors):
     from faker import Faker
     if region == 'USA':
         fake = Faker('en-US')
