@@ -16,7 +16,7 @@ const FakeDataGenerator = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch(`http://localhost:8000/fake?seed=${seed}&page=0&count=20&last_index=0&region=${region}&update=3&errors=${inputValue}`);
+        const response = await fetch(`${process.env.API}/fake?seed=${seed}&page=0&count=20&last_index=0&region=${region}&update=3&errors=${inputValue}`);
         const data = await response.json();
         setData(data)
       } catch (error) {
@@ -30,7 +30,7 @@ const FakeDataGenerator = () => {
 
   const fetchMoreData = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/fake?seed=0&page=${page}&count=10&last_index=${data.length}&region=${region}&update=0&errors=${inputValue}`);
+      const response = await fetch(`${process.env.API}/fake?seed=0&page=${page}&count=10&last_index=${data.length}&region=${region}&update=0&errors=${inputValue}`);
       const newData = await response.json();
       setData(prevData => [...prevData, ...newData]);
       setPage(prevPage => prevPage + 1);
@@ -41,7 +41,7 @@ const FakeDataGenerator = () => {
   useEffect(()=>{
     async function fetchData() {
       try {
-        const response = await fetch(`http://localhost:8000/fake?seed=${seed}&page=0&count=20&last_index=${data.length}&region=${region}&update=1&errors=${inputValue}`);
+        const response = await fetch(`${process.env.API}/fake?seed=${seed}&page=0&count=20&last_index=${data.length}&region=${region}&update=1&errors=${inputValue}`);
         const data2 = await response.json();
         setData(data2)
       } catch (error) {
@@ -70,7 +70,7 @@ const FakeDataGenerator = () => {
 
   const exportToCsv = async () => {
     try {
-      const response = await fetch('http://localhost:8000/fake/csv', {
+      const response = await fetch(`${process.env.API}/fake/csv`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
