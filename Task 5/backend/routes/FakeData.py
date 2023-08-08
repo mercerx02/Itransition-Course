@@ -47,7 +47,7 @@ def introduce_errors(data: dict, error_count: float, seed: int, region: str) -> 
         index_value = data.pop('index')
 
     for _ in range(int(error_count)):
-        random_key = random.choice([key for key in data if key != 'index'])
+        random_key = random.choice([key for key in data])
         data[random_key] = add_error(data[random_key])
 
     data['index'] = index_value
@@ -57,7 +57,6 @@ def introduce_errors(data: dict, error_count: float, seed: int, region: str) -> 
 
 def generate_fake_data(seed: int, count: int, page: int, last_index, region: str, update: int, errors):
     from faker import Faker
-    print(page, last_index)
     if region == 'USA':
         fake = Faker('en-US')
     elif region == 'Poland':
@@ -69,21 +68,21 @@ def generate_fake_data(seed: int, count: int, page: int, last_index, region: str
     if update == 3:
         for i in range(0, 20):
             fake_data.append(
-                introduce_errors(data={'index': i + 1, 'id': fake.ssn(), 'fio': fake.name(), 'address': fake.address(), 'phone': fake.phone_number()}, error_count=errors, seed=seed, region=region))
+                introduce_errors(data={'index': i + 1, 'id': fake.ssn(), 'fio': fake.name(), 'address': fake.address(), 'phone': fake.phone_number()}, error_count=errors, seed=seed + i, region=region))
         return fake_data
     elif update == 0:
         last_index = last_index if last_index != 0 else 20
 
         for i in range(0, last_index):
             fake_data.append(
-                introduce_errors(data={'index': i + 1, 'id': fake.ssn(), 'fio': fake.name(), 'address': fake.address(), 'phone': fake.phone_number()}, error_count=errors, seed=seed, region=region))
+                introduce_errors(data={'index': i + 1, 'id': fake.ssn(), 'fio': fake.name(), 'address': fake.address(), 'phone': fake.phone_number()}, error_count=errors, seed=seed + i, region=region))
         return fake_data
     else:
         last_index = last_index if last_index != 0 else 20
 
         for i in range(0, last_index + 10):
             fake_data.append(
-                introduce_errors(data={'index': i + 1, 'id': fake.ssn(), 'fio': fake.name(), 'address': fake.address(), 'phone': fake.phone_number()}, error_count=errors, seed=seed, region=region))
+                introduce_errors(data={'index': i + 1, 'id': fake.ssn(), 'fio': fake.name(), 'address': fake.address(), 'phone': fake.phone_number()}, error_count=errors, seed=seed + i, region=region))
         return fake_data
 
 
