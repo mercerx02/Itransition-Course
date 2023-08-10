@@ -27,7 +27,12 @@ const addMessage = asyncHandler(async (req, res) => {
         if (tags && tags.length > 0) {
             createdTags = await Promise.all(
                 tags.map(async tagName => {
-                    const tag = await Tag.create({ name: tagName });
+                    let tag = await Tag.findOne({ name: tagName });
+
+                    if (!tag) {
+                        tag = await Tag.create({ name: tagName });
+                    }
+
                     return tag._id;
                 })
             );
@@ -45,6 +50,7 @@ const addMessage = asyncHandler(async (req, res) => {
         res.status(400).json({ message: 'Server error' });
     }
 });
+
 
 
 module.exports = {
