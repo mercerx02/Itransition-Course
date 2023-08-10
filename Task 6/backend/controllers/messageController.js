@@ -6,7 +6,6 @@ const Tag = require('../models/TagModel')
 const getMessages= asyncHandler(async (req, res) => {
     try {
         const messages = await Message.find({}, 'text tags').populate({ path: 'tags', select: 'name' });
-        console.log(messages)
         const tags = await Tag.find({}, 'name');
 
         res.status(200).json({message: messages, tags: tags})
