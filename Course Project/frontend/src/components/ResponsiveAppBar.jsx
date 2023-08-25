@@ -38,7 +38,7 @@ const ResponsiveAppBar = ({ user }) => {
   const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
     if(setting === 'Log Out'){
-      window.open('http://localhost:5000/auth/logout', '_self');
+      window.open('https://itranstition-course-project.onrender.com/auth/logout', '_self');
 
     }
     else{

@@ -6,12 +6,12 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 const Login = () => {
 
   const authGoogle = () => {
-    window.open('http://localhost:5000/auth/google', '_self');
+    window.open('https://itranstition-course-project.onrender.com/auth/google', '_self');
   };
 
 
   const authGitHub = () => {
-    window.open('http://localhost:5000/auth/github', '_self');
+    window.open('https://itranstition-course-project.onrender.com/auth/github', '_self');
   };
 
   return (
