@@ -20,7 +20,9 @@ app.use(cookieSession(
 app.use(cors({
     origin: ["https://merry-cascaron-4c67b3.netlify.app","http://localhost:5173/"],
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true
+    credentials: true,
+    exposedHeaders: 'Set-Cookie',
+
 }))
 
 app.use(passport.initialize())
