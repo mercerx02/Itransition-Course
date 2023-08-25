@@ -14,6 +14,7 @@ app.use(cookieSession(
     name:"session",
     keys:['mercerx02'],
     maxAge: 100 * 24 * 60 * 60,
+    sameSite: 'none',
 }))
 
 app.use(cors({
