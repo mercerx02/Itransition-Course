@@ -13,11 +13,11 @@ app.use(cookieSession(
 {
     name:"session",
     keys:['mercerx02'],
-    maxAge: 100 * 24 * 60 * 60
+    maxAge: 100 * 24 * 60 * 60,
 }))
 
 app.use(cors({
-    origin: "https://merry-cascaron-4c67b3.netlify.app",
+    origin: "*",
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
 }))
