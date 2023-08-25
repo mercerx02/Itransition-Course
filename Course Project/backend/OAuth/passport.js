@@ -7,7 +7,7 @@ const dotenv = require('dotenv').config()
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://itranstition-course-project.onrender.com/auth/google/callback"
+    callbackURL: "https://itranstition-course-project.onrender.com/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     done(null, profile)
