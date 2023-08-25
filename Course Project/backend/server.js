@@ -19,11 +19,13 @@ const passport = require('passport')
 //     sameSite: 'none',
 // }))
 
+app.set('trust proxy', 1);
+
 app.use(session({
     secret: 'keyboard cat',
     resave: true,
     saveUninitialized: true,
-    cookie: { secure: true }
+    cookie: { secure: true , sameSite:'none', maxAge: 100 * 24 * 60 * 60 }
   }))
 
 
