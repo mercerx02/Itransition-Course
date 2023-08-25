@@ -4,7 +4,9 @@
   "description": "Course project",
   "main": "server.js",
   "scripts": {
-    "server": "nodemon backend/server.js"
+    "server": "nodemon backend/server.js",
+    "install-server": "cd backend && npm install",
+    "start-server": "cd backend && node server.js"
   },
   "author": "Vladimir Bykau",
   "license": "MIT",

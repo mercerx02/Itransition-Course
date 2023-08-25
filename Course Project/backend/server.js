@@ -17,7 +17,7 @@ app.use(cookieSession(
 }))
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://merry-cascaron-4c67b3.netlify.app",
     methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
 }))
