@@ -12,15 +12,20 @@ router.get("/login/failed", (req, res)=>{
     })
 })
 
-router.get("/user/me", (req, res)=>{
-    if(req.user){
-    res.status(200).json({
-        succes: true,
-        message: "succesful",
+router.get("/user/me", (req, res) => {
+    if (req.user) {
+      res.status(200).json({
+        success: true,
+        message: "successful",
         user: req.user,
-    })
+      });
+    } else {
+      res.status(401).json({
+        success: false,
+        message: "user not authenticated",
+      });
     }
-})
+  });
 
 router.get("/logout", (req, res) => {
     req.logout()
