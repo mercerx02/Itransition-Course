@@ -10,6 +10,7 @@ passport.use(new GoogleStrategy({
     callbackURL: "https://itranstition-course-project.onrender.com/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
+    console.log(profile)
     done(null, profile)
   }
 ));
@@ -21,6 +22,7 @@ passport.use(new GitHubStratedy({
   callbackURL: "https://itranstition-course-project.onrender.com/auth/github/callback"
 },
 function(accessToken, refreshToken, profile, done) {
+  console.log(profile)
   done(null, profile)
 }
 ));
