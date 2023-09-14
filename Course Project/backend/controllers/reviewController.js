@@ -3,13 +3,34 @@ const Review = require('../models/reviewModel')
 const Tag = require('../models/tagModel')
 const Comment = require('../models/commentModel')
 const Piece = require('../models/pieceModel')
+const dotenv = require('dotenv').config()
 
 cloudinary.config({
-    cloud_name: 'dfjkvsox1',
-    api_key: '224452213937319',
-    api_secret: '0yDCsehsPjC5Lx47gfAuaScWXnQ'
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY_CLOUDINARY,
+    api_secret: process.env.API_SECRET_CLOUDINARY
   });
 
+
+const save_tags = async (tags) => {
+  let createdTags = [];
+  const parsed_tags = JSON.parse(tags)
+  if (parsed_tags && parsed_tags.length > 0) {
+      createdTags = await Promise.all(
+          parsed_tags.map(async tagName => {
+              let tag = await Tag.findOne({ value: tagName });
+              if (tag) {
+                tag.count += 1;
+                await tag.save();
+              } else {
+                tag = await Tag.create({ value: tagName, count: 1 });
+              }
+              return tag._id;
+          })
+      );
+  }
+  return createdTags
+}
 
 
 const createReview = async (req, res) => {
@@ -18,23 +39,8 @@ const createReview = async (req, res) => {
         const file = req.file;
 
         console.log(name)
-        // const cloudinaryResponse = await cloudinary.uploader.upload(file.path);
-        let createdTags = [];
-        const parsed_tags = JSON.parse(tags)
-        if (parsed_tags && parsed_tags.length > 0) {
-            createdTags = await Promise.all(
-                parsed_tags.map(async tagName => {
-                    let tag = await Tag.findOne({ value: tagName });
-                    if (tag) {
-                      tag.count += 1;
-                      await tag.save();
-                    } else {
-                      tag = await Tag.create({ value: tagName, count: 1 });
-                    }
-                    return tag._id;
-                })
-            );
-        }
+        const cloudinaryResponse = await cloudinary.uploader.upload(file.path);
+        const createdTags = await save_tags(tags);
 
         let new_pice = await Piece.findOne({name: piece})
         if(!new_pice){
@@ -51,17 +57,16 @@ const createReview = async (req, res) => {
             tags: createdTags,
             text,
             author_note,
-            photo_url: 'https://gamemag.ru/images/imagemanager/cache/01/d52b/01d52b_1-.jpg',
+            photo_url: cloudinaryResponse.secure_url,
           });
         await newReview.save();
-        // console.log(cloudinaryResponse.secure_url)
         const review = await Review.findById(newReview._id)
         .populate({ path: 'author_id'})
         .populate({ path: 'piece', populate: { path:'notes'} })
         .populate({ path: 'tags', select: 'value' })
         .populate({ path: 'likes', select: '_id'})
         .populate({ path: 'comments', populate: { path: 'user_id' } })
-        res.json({ review: review});
+        res.status(200).json({ review: review});
       } catch (error) {
         console.log(error);
         res.status(400).json({ message: "Server error" });
@@ -105,6 +110,29 @@ const getMyReviews = async (req, res) =>{
   }
 
 }
+
+const getReviewsByTag = async (req, res) =>{
+  const tagValue = req.params.tag
+  const tag = await Tag.findOne({value: tagValue})
+
+
+  try {
+    const reviews = await Review.find({ tags: { $in: [tag._id] } })
+    .populate({ path: 'author_id'})
+    .populate({ path: 'piece', populate: { path:'notes'} })
+    .populate({ path: 'tags', select: 'value' })
+    .populate({ path: 'likes', select: '_id'})
+    .populate({ path: 'comments', populate: { path: 'user_id' } })
+
+    res.status(200).json({reviews: reviews})
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({message:'Server error'})
+
+  }
+
+}
+
 
 const getReviewByID = async (req, res) =>{
   try {
@@ -191,23 +219,8 @@ const editReview = async (req, res) => {
   try{
     const review = await Review.findById(reviewId).populate({ path: 'tags', select: 'value' });
 
-    const parsed_tags = JSON.parse(tags)
-    let createdTags = [];
+    const createdTags = await save_tags(tags)
 
-    if (parsed_tags && parsed_tags.length > 0) {
-        createdTags = await Promise.all(
-            parsed_tags.map(async tagName => {
-                let tag = await Tag.findOne({ value: tagName });
-                if (tag) {
-                  tag.count += 1;
-                  await tag.save();
-                } else {
-                  tag = await Tag.create({ value: tagName, count: 1 });
-                }
-                return tag._id;
-            })
-        );
-    }
     let new_pice = await Piece.findOne({name: piece})
     if(!new_pice){
       new_pice = await Piece.create({
@@ -221,7 +234,16 @@ const editReview = async (req, res) => {
     review.author_note = author_note
     review.tags = createdTags
     await review.save()
-    res.status(200).json({message:'Successful'})
+
+    const updatedReview = await Review.findById(reviewId)
+    .populate({ path: 'author_id'})
+    .populate({ path: 'piece', populate: { path:'notes'} })
+    .populate({ path: 'tags', select: 'value' })
+    .populate({ path: 'likes', select: '_id'})
+    .populate({ path: 'comments', populate: { path: 'user_id' } })
+
+    res.status(200).json({ review: updatedReview});
+
 } catch(error){
   console.error(error);
   res.status(500).json({ message: 'Server error' });
@@ -251,4 +273,5 @@ module.exports = {
     sendComment,
     editReview,
     deleteReview,
+    getReviewsByTag
 }

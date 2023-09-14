@@ -21,7 +21,8 @@ async function(accessToken, refreshToken, profile, done) {
         provider_id: profile.id,
         name: profile.displayName,
         photo_url: profile.photos[0].value,
-        is_admin: false
+        is_admin: false,
+        is_blocked: false
       });
 
       await newUser.save();
@@ -39,9 +40,27 @@ passport.use(new GitHubStratedy({
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
   callbackURL: `${process.env.BACKEND_URL}/auth/github/callback`
 },
-function(accessToken, refreshToken, profile, done) {
-  done(null, profile)
-}
+async function(accessToken, refreshToken, profile, done) {
+  try {
+    const existingUser = await User.findOne({ provider_id: profile.id });
+
+    if (existingUser) {
+      done(null, existingUser);
+    } else {
+      const newUser = new User({
+        provider_id: profile.id,
+        name: profile.displayName,
+        photo_url: profile.photos[0].value,
+        is_admin: false,
+        is_blocked: false
+      });
+
+      await newUser.save();
+      done(null, newUser);
+    }
+  } catch (error) {
+    done(error, null);
+  }}
 ));
 
 

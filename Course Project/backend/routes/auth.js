@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const passport = require('passport')
 const dotenv = require('dotenv').config()
-
+const User = require('../models/userModel')
 
 router.get("/google", passport.authenticate("google", {scope:["profile"]}))
 
@@ -12,12 +12,14 @@ router.get("/login/failed", (req, res)=>{
     })
 })
 
-router.get("/user/me", (req, res) => {
+router.get("/user/me", async (req, res) => {
     if (req.user) {
+      const user = await User.findById(req.user._id)
+
       res.status(200).json({
         success: true,
         message: "successful",
-        user: req.user,
+        user: user,
       });
     } else {
       res.status(401).json({

@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema({
       type: Boolean,
       required: true,
       default: false
+    },
+    is_blocked: {
+      type: Boolean,
+      required: true,
+      default: false
     }
   },
   {

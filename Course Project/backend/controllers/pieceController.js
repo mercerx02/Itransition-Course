@@ -3,7 +3,8 @@ const Review = require('../models/reviewModel')
 
 const getPieces = async (req, res) => {
     try {
-        const pieces = await Piece.find({}, 'name')
+        const pieces = await Piece.find({})
+        .populate({path:'notes'})
         res.status(200).json({pieces: pieces})
 
     } catch (error) {

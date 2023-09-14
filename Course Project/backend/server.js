@@ -16,13 +16,13 @@ const passport = require('passport')
 
 connectDB()
 
-// app.set('trust proxy', 1);
+app.set('trust proxy', 1);
 
 app.use(session({
     secret: 'keyboard cat',
     resave: true,
     saveUninitialized: true,
-    // cookie: { secure: true , sameSite:'none', maxAge: 100 * 24 * 60 * 60 }
+    cookie: { secure: true , sameSite:'none', maxAge: 100 * 24 * 60 * 60 }
   }))
 
 
