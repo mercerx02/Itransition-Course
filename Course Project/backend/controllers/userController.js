@@ -75,6 +75,7 @@ const blockUserById = async (req, res) => {
         res.status(200).json({user: updated_user})
 
     } catch (error) {
+        console.log(error)
         res.status(400).json({message:'Server error'})
 
     }
