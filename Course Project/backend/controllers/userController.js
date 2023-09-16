@@ -70,7 +70,7 @@ const deleteUserById = async (req, res) => {
 const blockUserById = async (req, res) => {
     try {
         const id = req.params.id
-        const updated_user = await updateUserStatus(id, false)
+        const updated_user = await updateUserStatus(id, true)
         res.status(200).json({user: updated_user})
 
     } catch (error) {
