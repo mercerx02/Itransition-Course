@@ -36,13 +36,12 @@ const save_tags = async (tags) => {
 const createReview = async (req, res) => {
   try {
       const { name, piece, group, tags, text, author_note, userId } = req.body;
-      const fileBuffer = req.file.buffer; // Получить буфер файла
+      const fileBuffer = req.file.buffer
 
       const cloudinaryResponse = await cloudinary.uploader.upload_stream(
         async (error, result) => {
           if (error) {
-            console.error('Ошибка загрузки в Cloudinary:', error);
-            return res.status(500).json({ error: 'Ошибка загрузки в Cloudinary' });
+            return res.status(500).json({ error: 'Server Error' });
           }
 
           // Создать теги

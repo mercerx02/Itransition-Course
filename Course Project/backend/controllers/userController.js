@@ -71,6 +71,7 @@ const blockUserById = async (req, res) => {
     try {
 
         const id = req.params.id
+        console.log(id)
         const updated_user = await updateUserStatus(id, false)
         res.status(200).json({user: updated_user})
 
