@@ -5,7 +5,7 @@ const updateUserStatus = async (user_id, status) => {
     const user = await User.findById(user_id)
     user.is_blocked = status
     await user.save()
-    const updated_user = await User.findById(id)
+    const updated_user = await User.findById(user_id)
     return updated_user
 
 }
@@ -69,9 +69,7 @@ const deleteUserById = async (req, res) => {
 
 const blockUserById = async (req, res) => {
     try {
-
         const id = req.params.id
-        console.log(id)
         const updated_user = await updateUserStatus(id, false)
         res.status(200).json({user: updated_user})
 
