@@ -14,9 +14,24 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.5",
+    "@mui/x-data-grid": "^6.12.1",
+    "@progress/kendo-drawing": "^1.17.6",
+    "@progress/kendo-licensing": "^1.3.2",
+    "@progress/kendo-react-pdf": "^5.18.0",
+    "axios": "^1.4.0",
+    "date-fns": "^2.30.0",
+    "html2canvas": "^1.4.1",
+    "i18next": "^23.5.0",
+    "jspdf": "^2.5.1",
+    "minisearch": "^6.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0"
+    "react-drag-drop-files": "^2.3.10",
+    "react-i18next": "^13.2.2",
+    "react-markdown": "^8.0.7",
+    "react-router-dom": "^6.15.0",
+    "react-tagcloud": "^2.3.1",
+    "react-to-pdf": "^1.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
@@ -26,6 +41,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "react-error-overlay": "6.0.9",
     "vite": "^4.4.5"
   }
 }

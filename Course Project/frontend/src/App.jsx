@@ -1,117 +1,75 @@
 import { createContext, useEffect, useMemo, useState } from "react"
-import Login from "./components/Login"
-import MainPage from "./components/MainPage"
-import Review from "./components/Review";
+import LoginPage from "./pages/LoginPage"
+import MainPage from "./pages/MainPage"
+import ReviewPage from "./pages/ReviewPage";
+import ManipulateReview from "./components/ManipulateReview";
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
-
 import {ThemeProvider, createTheme } from '@mui/material/styles';
-
+import AlertComponent from "./components/AlertComponent";
 import CssBaseline from "@mui/material/CssBaseline";
+import UserPage from "./pages/UserPage";
+import AdminPage from "./pages/AdminPage";
+import FilterPage from "./pages/FilterPage";
+import SecureUser from "./components/SecureUser";
+import SecureAdminPage from "./components/SecureAdminPage";
+import SecureEditReview from "./components/SecureEditReview";
+import { getReviews } from "./services/reviewsService";
+import { getMe } from "./services/usersService";
+
 
 export const ColorModeContext = createContext({
   toggleColorMode: () => {},
 });
 
 
-
-function App() {
-  const [mode, setMode] = useState("light")
-  const [user, setUser] = useState(null)
-
-  const reviews = [
-    {
-      id: 1,
-      user: 'John Doe',
-      date: 'August 20, 2023',
-      title: 'Amazing Product',
-      tags: ['Tech', 'Gadgets'],
-      rating: 9.5,
-      likes: 150,
-      comments: 32,
-      image: 'product.jpg', // Add the image path here
-    },
-    {
-      id: 1,
-      user: 'John Doe',
-      date: 'August 20, 2023',
-      title: 'Amazing Product',
-      tags: ['Tech', 'Gadgets'],
-      rating: 9.5,
-      likes: 150,
-      comments: 32,
-      image: 'product.jpg', // Add the image path here
-    },
-    {
-      id: 1,
-      user: 'John Doe',
-      date: 'August 20, 2023',
-      title: 'Amazing Product',
-      tags: ['Tech', 'Gadgets'],
-      rating: 9.5,
-      likes: 150,
-      comments: 32,
-      image: 'product.jpg', // Add the image path here
-    },
-    {
-      id: 1,
-      user: 'John Doe',
-      date: 'August 20, 2023',
-      title: 'Amazing Product',
-      tags: ['Tech', 'Gadgets'],
-      rating: 9.5,
-      likes: 150,
-      comments: 32,
-      image: 'product.jpg', // Add the image path here
-    },
-    // Add more review objects here
-  ];
-
-  const tags = [
-    { value: 'JavaScript', count: 38 },
-    { value: 'React', count: 30 },
-    { value: 'Nodejs', count: 28 },
-    { value: 'Express.js', count: 25 },
-    { value: 'HTML5', count: 33 },
-    { value: 'MongoDB', count: 18 },
-    { value: 'CSS3', count: 20 },
-    // Add more tags here...
-  ];
-
-
-  useEffect(()=>{
-    const getMe = () =>{
-      fetch('https://itranstition-course-project.onrender.com/auth/user/me',{
-        method: 'GET',
-        credentials: 'include',
-        headers:{
-          Accept: 'application/json',
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true
-        },
-
-      })
-      .then(response =>{
-        if(response.status === 200) return response.json()
-        throw new Error('Auth failed')
-      })
-      .then(data =>{
-        setUser(data.user)
-        console.log(data.user)
-      })
-      .catch(err =>{
-        console.log(err)
-      })
+function App({BACKEND_URL, CLIENT_URL}) {
+  const [mode, setMode] = useState(()=>{
+    const color_mode = localStorage.getItem('color_mode')
+    if(color_mode){
+      return color_mode
     }
+    return 'light'
+  })
+  const [user, setUser] = useState(null)
+  const [reviews, setReviews] = useState([])
+  const itemsPerPage = 4;
+  const [page, setPage] = useState(1);
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const [alertMessage, setAlertMessage] = useState('')
+  const [openAlert, setOpenAlert] = useState(false)
+  const [searchInput, setSearchInput] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [adminMode, setAdminMode] = useState(() => {
+    const savedAdminMode = localStorage.getItem('adminMode');
+    const booleanValue = savedAdminMode === "true" ? true : false;
+    return booleanValue
+  });
+
+  useEffect(() => {
     getMe()
-  },[])
+    .then(result => setUser(result))
+
+  }, []);
+
+  useEffect(() => {
+    getReviews()
+    .then(result => setReviews(result))
+
+}, []);
 
 
   const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+
+        setMode((prevMode) => {
+          const new_mode = prevMode === "light" ? "dark" : "light"
+          localStorage.setItem('color_mode', new_mode)
+          return new_mode
+        });
       },
     }),
     []
@@ -128,20 +86,33 @@ function App() {
   );
 
 
-
   return (
     <>
     <ColorModeContext.Provider value={colorMode}>
     <ThemeProvider theme={theme}>
     <CssBaseline />
 
-    {/* <NavBar user={user}></NavBar> */}
-    <ResponsiveAppBar user={user}></ResponsiveAppBar>
+    <ResponsiveAppBar BACKEND_URL={BACKEND_URL} CLIENT_URL={CLIENT_URL} setAdminMode={setAdminMode} adminMode={adminMode} setSearchResults={setSearchResults} reviews={reviews} searchInput={searchInput} setSearchInput={setSearchInput} user={user}></ResponsiveAppBar>
+    <AlertComponent open={openAlert} setOpen={setOpenAlert} message={alertMessage}></AlertComponent>
     <Router>
       <Routes>
-        <Route path="/login" element={user ? <Navigate to="/"></Navigate> : <Login></Login>}></Route>
-        <Route path="/" element={<MainPage tags={tags} reviews={reviews}></MainPage>}></Route>
-        <Route path="/review/:id" element={<Review reviews={reviews}></Review>}></Route>
+        <Route path="/login" element={user ? <Navigate to="/"></Navigate> : <LoginPage BACKEND_URL={BACKEND_URL} CLIENT_URL={CLIENT_URL} ></LoginPage>}></Route>
+        <Route path="/" element={<MainPage searchResults={searchResults} setPage={setPage} endIndex={endIndex} startIndex={startIndex} page={page} itemsPerPage={itemsPerPage} user={user} reviews={reviews} setReviews={setReviews}></MainPage>}></Route>
+        <Route path="/review/:id" element={<ReviewPage adminMode={adminMode} setOpenAlert={setOpenAlert} setAlertMessage={setAlertMessage} reviews={reviews} setReviews={setReviews} user={user}></ReviewPage>}></Route>
+        <Route path="/user/:id/create" element={<SecureUser setOpenAlert={setOpenAlert} setAlertMessage={setAlertMessage}></SecureUser>}>
+          <Route index element={<ManipulateReview adminMode={adminMode} setReviews={setReviews} setOpen={setOpenAlert} setAlertMessage={setAlertMessage} mode='create' user={user}></ManipulateReview>}></Route>
+        </Route>
+        <Route path="/review/:id/edit" element={<SecureEditReview setOpenAlert={setOpenAlert} setAlertMessage={setAlertMessage} ></SecureEditReview>}>
+          <Route index element={<ManipulateReview setReviews={setReviews} reviews={reviews} adminMode={adminMode} setOpen={setOpenAlert} setAlertMessage={setAlertMessage} mode='edit' user={user}></ManipulateReview>}></Route>
+        </Route>
+        <Route path="/user/:id" element={<SecureUser setOpenAlert={setOpenAlert} setAlertMessage={setAlertMessage}></SecureUser>}>
+          <Route index element={<UserPage searchResults={searchResults} user={user} endIndex={endIndex} startIndex={startIndex} setReviews={setReviews}></UserPage>}></Route>
+        </Route>
+        <Route path="/admin" element={<SecureAdminPage adminMode={adminMode}></SecureAdminPage>}>
+          <Route index element={<AdminPage></AdminPage>}></Route>
+        </Route>
+        <Route path="/reviews/tags/:tag" element={<FilterPage searchResults={searchResults} setPage={setPage} endIndex={endIndex} startIndex={startIndex} page={page} itemsPerPage={itemsPerPage} user={user}></FilterPage>}></Route>
+
       </Routes>
     </Router>
     </ThemeProvider>
