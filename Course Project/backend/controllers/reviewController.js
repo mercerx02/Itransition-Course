@@ -44,10 +44,8 @@ const createReview = async (req, res) => {
             return res.status(500).json({ error: 'Server Error' });
           }
 
-          // Создать теги
           const createdTags = await save_tags(tags);
 
-          // Найти или создать произведение
           let new_pice = await Piece.findOne({name: piece})
           if(!new_pice){
             new_pice = await Piece.create({
@@ -55,7 +53,6 @@ const createReview = async (req, res) => {
             })
           }
 
-          // Создать новый обзор
           const newReview = new Review({
             author_id: userId,
             piece: new_pice._id,
@@ -69,7 +66,6 @@ const createReview = async (req, res) => {
 
           await newReview.save();
 
-          // Заполнить обзор данными и отправить в ответе
           const review = await Review.findById(newReview._id)
             .populate({ path: 'author_id'})
             .populate({ path: 'piece', populate: { path:'notes'} })
@@ -226,44 +222,89 @@ const sendComment = async (req, res) => {
 
 
 const editReview = async (req, res) => {
-  const { name, piece, group, tags, text, author_note} = req.body;
-
+  const { name, piece, group, tags, text, author_note } = req.body;
   const reviewId = req.params.id;
 
-  try{
-    const review = await Review.findById(reviewId).populate({ path: 'tags', select: 'value' });
+  try {
+    const review = await Review.findById(reviewId);
 
-    const createdTags = await save_tags(tags)
-
-    let new_pice = await Piece.findOne({name: piece})
-    if(!new_pice){
-      new_pice = await Piece.create({
-        name: piece
-      })
+    if (!review) {
+      return res.status(404).json({ message: 'Review not found' });
     }
-    review.name = name
-    review.piece = new_pice._id
-    review.group = group
-    review.text = text
-    review.author_note = author_note
-    review.tags = createdTags
-    await review.save()
 
-    const updatedReview = await Review.findById(reviewId)
-    .populate({ path: 'author_id'})
-    .populate({ path: 'piece', populate: { path:'notes'} })
-    .populate({ path: 'tags', select: 'value' })
-    .populate({ path: 'likes', select: '_id'})
-    .populate({ path: 'comments', populate: { path: 'user_id' } })
+    if (req.file) {
+      const cloudinaryResponse = await cloudinary.uploader.upload_stream(
+        async (error, result) => {
+          if (error) {
+            console.error('Ошибка загрузки в Cloudinary:', error);
+            return res.status(500).json({ error: 'Ошибка загрузки в Cloudinary' });
+          }
 
-    res.status(200).json({ review: updatedReview});
+          review.photo_url = result.secure_url;
 
-} catch(error){
-  console.error(error);
-  res.status(500).json({ message: 'Server error' });
-}
+          const createdTags = await save_tags(tags);
+          let new_piece = await Piece.findOne({ name: piece });
 
-}
+          if (!new_piece) {
+            new_piece = await Piece.create({
+              name: piece,
+            });
+          }
+
+          review.name = name;
+          review.piece = new_piece._id;
+          review.group = group;
+          review.text = text;
+          review.author_note = author_note;
+          review.tags = createdTags;
+
+          await review.save();
+
+          const updatedReview = await Review.findById(reviewId)
+            .populate({ path: 'author_id' })
+            .populate({ path: 'piece', populate: { path: 'notes' } })
+            .populate({ path: 'tags', select: 'value' })
+            .populate({ path: 'likes', select: '_id' })
+            .populate({ path: 'comments', populate: { path: 'user_id' } });
+
+          res.status(200).json({ review: updatedReview });
+        }
+      ).end(req.file.buffer);
+    } else {
+      const createdTags = await save_tags(tags);
+      let new_piece = await Piece.findOne({ name: piece });
+
+      if (!new_piece) {
+        new_piece = await Piece.create({
+          name: piece,
+        });
+      }
+
+      review.name = name;
+      review.piece = new_piece._id;
+      review.group = group;
+      review.text = text;
+      review.author_note = author_note;
+      review.tags = createdTags;
+
+      await review.save();
+
+      const updatedReview = await Review.findById(reviewId)
+        .populate({ path: 'author_id' })
+        .populate({ path: 'piece', populate: { path: 'notes' } })
+        .populate({ path: 'tags', select: 'value' })
+        .populate({ path: 'likes', select: '_id' })
+        .populate({ path: 'comments', populate: { path: 'user_id' } });
+
+      res.status(200).json({ review: updatedReview });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 
 const deleteReview = async (req, res) => {
   const reviewId = req.params.id;
