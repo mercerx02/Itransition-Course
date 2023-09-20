@@ -5,4 +5,4 @@ const { getComments } = require('../controllers/commentController')
 
 module.exports = router
 
-router.route('/comments').get(getComments)
+router.route('/comments/:id').get(getComments)
