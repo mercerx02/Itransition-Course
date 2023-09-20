@@ -1,4 +1,5 @@
 const adminMiddleware = async (req, res, next) => {
+  console.log('User', req.user)
     if (req.user && req.user.is_admin === true) {
       next();
     } else {
