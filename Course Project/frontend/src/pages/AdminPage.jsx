@@ -43,6 +43,7 @@ const AdminPage = () => {
   useEffect(() => {
       getUsers()
       .then((res) => {
+          console.log(res)
           setUsers(res);
           setTotalUsers(res.length);
       })
@@ -167,29 +168,29 @@ const AdminPage = () => {
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Button
             variant="contained"
-            color="secondary" // Красный цвет для удаления
+            color="secondary"
             onClick={handleDelete}
             disabled={selectedRows.length === 0}
             style={{ marginRight: '8px' }}
           >
-            Удалить
+            Delete
           </Button>
           <Button
             variant="contained"
-            color="primary" // Зеленый цвет для разблокировки
+            color="primary"
             onClick={handleUnlock}
             disabled={selectedRows.length === 0}
             style={{ marginRight: '8px' }}
           >
-            Разблокировать
+            Unblock
           </Button>
           <Button
             variant="contained"
-            color="warning" // Желтый цвет для блокировки
+            color="warning"
             onClick={handleLock}
             disabled={selectedRows.length === 0}
           >
-            Заблокировать
+            Block
           </Button>
         </div>
 

@@ -17,3 +17,17 @@ export const submitComment = async (id, comment) => {
     }
 
 }
+
+export const getComments = async (id) => {
+    try {
+        const response = await axios.get(
+            `${BACKEND_URL}/api/comments/${id}`,
+            { withCredentials: true }
+            );
+        return response.data.comments
+    } catch (error) {
+        console.log(error)
+
+    }
+
+}

@@ -18,6 +18,7 @@ import { getReviewById } from '../services/reviewsService';
 import { useParams } from 'react-router-dom';
 import { submitComment } from '../services/commentService';
 import { usePDF } from 'react-to-pdf';
+import { getComments } from '../services/commentService';
 
 const ReviewPage = ({user, setReviews, reviews, setAlertMessage, setOpenAlert, adminMode}) => {
   const { id } = useParams()
@@ -26,6 +27,27 @@ const ReviewPage = ({user, setReviews, reviews, setAlertMessage, setOpenAlert, a
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
   const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
+  const [comments, setComments] = useState([])
+
+  useEffect(()=>{
+    const fetchComments = async () =>{
+      const comments = await getComments(id)
+      setComments(comments)
+    }
+
+    fetchComments()
+
+    const interval = setInterval(() => {
+      fetchComments();
+    }, 2000);
+
+    return () => {
+      clearInterval(interval);
+    };
+
+
+  },[])
+
 
 const handleOpenDialog = () =>{
   setOpen(true)
@@ -54,7 +76,6 @@ const handleOpenDialog = () =>{
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: 20 }}>
       {review ? (
         <>
-
         <div ref={targetRef}>
         <DeleteReviewDialog setReviews={setReviews} setOpenAlert={setOpenAlert} setAlertMessage={setAlertMessage} reviewId={review._id} open={open} setOpen={setOpen}></DeleteReviewDialog>
         {user && (user._id === review.author_id._id || adminMode) && (
@@ -76,7 +97,7 @@ const handleOpenDialog = () =>{
               maxWidth: '100%',
               width: '100%',
               marginBottom: 20,
-              boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.1)',
+              boxShadow: 18,
             }}
           />
           <Typography variant="h4" gutterBottom>
@@ -94,11 +115,11 @@ const handleOpenDialog = () =>{
             )}{' '}
             by {review.author_id.name}
           </Typography>
-          <span>
+          <Typography>
             <ReactMarkdown>
             {review.text}
             </ReactMarkdown>
-          </span>
+          </Typography>
           <div
             style={{
               display: 'flex',
@@ -139,12 +160,12 @@ const handleOpenDialog = () =>{
           <Typography sx={{padding:1}} variant="h5" gutterBottom>
             Comments:
           </Typography>
-          {review.comments.length === 0 ? (
+          {comments.length === 0 ? (
             <Typography sx={{padding: 1}} variant="body1">
               Оставьте первый комментарий!
             </Typography>
           ) : (
-            review.comments.map((comment, index) => (
+            comments.map((comment, index) => (
               <Box key={index} sx={{ marginBottom: 2 }}>
                 <Box
                   sx={{

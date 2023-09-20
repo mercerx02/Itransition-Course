@@ -15,7 +15,7 @@ i18n
     resources: {
       en: {
         translation: {
-          "recomendations": "Recomendations",
+          "recomendations": "Reviews",
           "trends":"Trends",
           "recent":"Recent",
           "likes":"By likes count",
@@ -49,7 +49,10 @@ i18n
           'book':'Book',
           'sport':'Sport',
           'tech':'Technology',
-          'other':'Other'
+          'other':'Other',
+          'liked_reviews':'By liked reviews',
+          'no_reviews':'No reviews ):',
+          'my_reviews':'My reviews'
 
         }
       },
@@ -90,6 +93,10 @@ i18n
           'tech':'Технологии',
           'other':'Другое',
           'delete_success':'Обзор был удален успешно!',
+          'liked_reviews':'Понравившееся обзоры',
+          'no_reviews':'Обзоров нет ):',
+          'my_reviews':'Мои обзоры'
+
 
         }
       }

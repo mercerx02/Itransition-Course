@@ -59,7 +59,7 @@ export const unBlockUserById = async (id) => {
 
 export const deleteUserById = async (id) => {
     try {
-       const response = await axios.delete(`http://localhost:5000/api/users/${id}`, { withCredentials: true })
+       const response = await axios.delete(`${BACKEND_URL}/api/users/${id}`, { withCredentials: true })
        return response
 
     } catch (error) {

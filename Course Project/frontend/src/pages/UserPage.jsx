@@ -14,14 +14,14 @@ import { useLocation} from 'react-router-dom';
 import { getReviewsByUserId } from '../services/reviewsService';
 import { getUserById } from '../services/usersService';
 
-const UserPage = ({ endIndex, startIndex, searchResults}) => {
+const UserPage = ({ endIndex, startIndex, searchResults, me, adminMode}) => {
   const [reviews, setReviews] = useState([]);
   const [totalLikes, setTotalLikes] = useState(0);
   const navigate = useNavigate();
-  const { t } = useTranslation()
   const location = useLocation();
   const userId = location.pathname.split('/')[2];
   const [user, setUser] = useState(null)
+  const {t} = useTranslation()
 
 
   useEffect(()=>{
@@ -56,7 +56,7 @@ const UserPage = ({ endIndex, startIndex, searchResults}) => {
         <Card style={{ marginBottom: '16px' }}>
           <CardHeader
             title={
-            <Typography variant="h5">{t('my profile')} {user.is_admin && <Chip key='admin' label='admin' color="success"></Chip>}</Typography>
+            <Typography variant="h5">{ me && user._id === me._id ? t('my profile'): `${user.name}'s profile`} {user.is_admin && <Chip key='admin' label='admin' color="success"></Chip>}</Typography>
           }
           />
           <CardContent>
@@ -73,15 +73,18 @@ const UserPage = ({ endIndex, startIndex, searchResults}) => {
         reviews={reviews}
         setReviews={setReviews}
         searchResults={searchResults}
+        reviews_name={t('my_reviews')}
       />
-      <SpeedDial
-        title='New review'
-        ariaLabel="SpeedDial basic example"
-        sx={{ position: 'fixed', bottom: 16, right: 16 }}
-        icon={<SpeedDialIcon icon={<ArticleIcon />} />}
-        onClick={() => navigate(`/user/${user._id}/create`)}
+      {user && (user._id === me._id || adminMode) && (
+        <SpeedDial
+          title='New review'
+          ariaLabel="SpeedDial basic example"
+          sx={{ position: 'fixed', bottom: 16, right: 16 }}
+          icon={<SpeedDialIcon icon={<ArticleIcon />} />}
+          onClick={() => navigate(`/user/${user._id}/create`)}
         >
-      </SpeedDial>
+        </SpeedDial>
+      )}
     </div>
   );
 };

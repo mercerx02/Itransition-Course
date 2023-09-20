@@ -59,7 +59,7 @@ export const editReview = async (reviewId,formData) => {
 
 export const deleteReview = async (reviewId) => {
     try {
-        const response = await axios.delete(`http://localhost:5000/api/reviews/${reviewId}`, { withCredentials: true })
+        const response = await axios.delete(`${BACKEND_URL}/api/reviews/${reviewId}`, { withCredentials: true })
         return response
     } catch (error) {
         console.log(error)

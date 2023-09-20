@@ -105,9 +105,9 @@ function App({BACKEND_URL, CLIENT_URL}) {
         <Route path="/review/:id/edit" element={<SecureEditReview setOpenAlert={setOpenAlert} setAlertMessage={setAlertMessage} ></SecureEditReview>}>
           <Route index element={<ManipulateReview setReviews={setReviews} reviews={reviews} adminMode={adminMode} setOpen={setOpenAlert} setAlertMessage={setAlertMessage} mode='edit' user={user}></ManipulateReview>}></Route>
         </Route>
-        <Route path="/user/:id" element={<SecureUser setOpenAlert={setOpenAlert} setAlertMessage={setAlertMessage}></SecureUser>}>
-          <Route index element={<UserPage searchResults={searchResults} user={user} endIndex={endIndex} startIndex={startIndex} setReviews={setReviews}></UserPage>}></Route>
-        </Route>
+
+        <Route path="/user/:id" element={<UserPage adminMode={adminMode} me={user} searchResults={searchResults} user={user} endIndex={endIndex} startIndex={startIndex} setReviews={setReviews}></UserPage>}></Route>
+
         <Route path="/admin" element={<SecureAdminPage adminMode={adminMode}></SecureAdminPage>}>
           <Route index element={<AdminPage></AdminPage>}></Route>
         </Route>

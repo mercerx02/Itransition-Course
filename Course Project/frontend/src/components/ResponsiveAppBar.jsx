@@ -120,7 +120,7 @@ const ResponsiveAppBar = ({ user, searchInput, setSearchInput , reviews, setSear
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
+              display: { xs: 'flex', md: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
               color: 'inherit',
@@ -134,7 +134,7 @@ const ResponsiveAppBar = ({ user, searchInput, setSearchInput , reviews, setSear
             label={t('search')}
             variant="outlined"
             size="small"
-            sx={{ width: '250px' }}
+            sx={{ width: '250px' , display: {xs:'none', md:'flex'}}}
             value={searchInput}
             onChange={handleSearchInput}
             fullWidth

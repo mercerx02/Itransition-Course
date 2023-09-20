@@ -189,6 +189,7 @@ const filter_options = (options, params) => {
       )}
       <TextField
         label={t('review name')}
+        required={true}
         fullWidth
         margin="normal"
         value={title}
@@ -225,6 +226,7 @@ const filter_options = (options, params) => {
 
      <InputLabel id="group_label">{t('group')}</InputLabel>
       <Select
+      required={true}
       labelId="group_label"
       id="group"
       value={group}
@@ -258,6 +260,7 @@ const filter_options = (options, params) => {
       </div>
 
       <TextareaAutosize
+        required={true}
         minRows={5}
         maxRows={10}
         placeholder={t('review text')}
@@ -298,8 +301,9 @@ const filter_options = (options, params) => {
 
       <Button
         variant="contained"
+        disabled={piece === ''}
         color="primary"
-        style={{ marginTop: "1rem" }}
+        sx={{marginBottom: 2, marginTop: 2}}
         onClick={handleSubmit}
       >
         {mode}
