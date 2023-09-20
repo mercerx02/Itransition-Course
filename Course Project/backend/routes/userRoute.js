@@ -6,6 +6,6 @@ const { adminMiddleware } = require('../middleware/adminMiddleware')
 module.exports = router
 
 router.route('/users').get(adminMiddleware,getUsers)
-router.route('/users/:id').get(getUserById).put(adminMiddleware, setRoleById).delete(adminMiddleware, deleteUserById)
-router.put('/users/:id/block', adminMiddleware, blockUserById)
-router.put('/users/:id/unblock', adminMiddleware, unBlockUserById)
+router.route('/users/:id').get(getUserById).put(setRoleById).delete(deleteUserById)
+router.put('/users/:id/block',  blockUserById)
+router.put('/users/:id/unblock',  unBlockUserById)
