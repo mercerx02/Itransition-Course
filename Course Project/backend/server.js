@@ -9,6 +9,7 @@ const reviewRoutes = require('./routes/reviewRoute')
 const tagRoutes = require('./routes/tagRoute')
 const userRoutes = require('./routes/userRoute')
 const pieceRoutes = require('./routes/pieceRoute')
+const commentRoutes = require('./routes/commentRoute')
 const session = require('express-session')
 const connectDB = require('./config/db')
 
@@ -44,6 +45,7 @@ app.use('/api', reviewRoutes)
 app.use('/api', tagRoutes)
 app.use('/api', userRoutes)
 app.use('/api', pieceRoutes)
+app.use('/api', commentRoutes)
 
 
 
