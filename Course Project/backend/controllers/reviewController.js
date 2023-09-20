@@ -38,7 +38,6 @@ async function uploadToCloudinary(fileBuffer) {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload_stream((error, result) => {
       if (error) {
-        console.error('Ошибка загрузки в Cloudinary:', error);
         reject(error);
       } else {
         resolve(result);
