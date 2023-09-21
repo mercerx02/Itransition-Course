@@ -75,7 +75,7 @@ const UserPage = ({ endIndex, startIndex, searchResults, me, adminMode}) => {
         searchResults={searchResults}
         reviews_name={t('my_reviews')}
       />
-      {user && (user._id === me._id || adminMode) && (
+      {user && me && (user._id === me._id || adminMode) && (
         <SpeedDial
           title='New review'
           ariaLabel="SpeedDial basic example"
