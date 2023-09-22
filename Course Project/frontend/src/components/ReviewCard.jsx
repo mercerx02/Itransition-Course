@@ -48,18 +48,25 @@ const ReviewCard = ({user, review, reviews, setReviews}) => {
   return (
     <>
     <Card key={review._id} sx={{ mb: 2,boxShadow: 18, transform: 'translateY(0)',transition: 'transform 0.2s ease', '&:hover': {
-      transform: 'translateY(-4px)', }, borderRadius: 8 }}>
+      transform: 'translateY(-4px)', }, borderRadius: 8 , minHeight: 400, maxHeight:600, minWidth:350}}>
         <Link to={`/review/${review._id}`} style={{ textDecoration: 'none' }}>
         <CardMedia
             component="img"
-            height="450"
+            height="200"
             width="450"
             image={review.photo_url}
             alt={review.name}
         />
         </Link>
         <CardContent>
-        <Typography variant="h5" gutterBottom sx={{ fontSize: '1.25rem', color: 'primary' }}>
+        <Typography variant="h5" gutterBottom sx={{
+          fontSize: '1.25rem',
+          color: 'primary',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          maxWidth: '400px',
+          }}>
             {review.name}
         </Typography>
         <Box
@@ -75,18 +82,19 @@ const ReviewCard = ({user, review, reviews, setReviews}) => {
             </Typography>
         </Box>
         <Box display="flex" alignItems="center" mt={1}>
-        <Typography>{t('piece')}: {review.piece.name}</Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
-            <Rating
-                name={`user-rating-${review._id}`}
-                value={calculateAverageRating(review.piece.notes)}
-                readOnly={!user}
-                precision={0.5}
-                onChange={(event, newValue) => handleUserRatingChange(review._id, newValue)}
-            />
+        <Typography
+        sx={{
+          color: 'primary',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          maxWidth: '400px',
+        }}
+
+        >{t('piece')}: {review.piece.name}</Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', ml: 1 }}>
             <Typography>{calculateAverageRating(review.piece.notes)}</Typography>
-            <PeopleAltOutlined fontSize="small" style={{ marginLeft: 5 }} />
-            <Typography variant="body2">{review.piece.notes.length}</Typography>
+            <StarIcon fontSize="small" color="primary"></StarIcon>
         </Box>
     </Box>
 

@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import { useTranslation } from "react-i18next";
 import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
-import { MenuItem , Select} from "@mui/material";
+import { MenuItem , Select, Container, Grid, FormControl} from "@mui/material";
 import InputLabel from '@mui/material/InputLabel';
 import { getPieces } from "../services/pieceService";
 import { getTags } from "../services/tagsService";
@@ -178,137 +178,138 @@ const filter_options = (options, params) => {
 
 
   return (
-    <div style={{ width: "50%", margin: "auto" }}>
-
-    {adminMode && (
-        <Paper elevation={3} style={{ background: "red", color: "white", padding: "1rem", marginBottom: "1rem" }}>
-          <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
-            {t('admin notion')}
-          </Typography>
-        </Paper>
-      )}
-      <TextField
-        label={t('review name')}
-        required={true}
-        fullWidth
-        margin="normal"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <Autocomplete
-        options={pieces}
-        onChange={handlePiece}
-        value={piece}
-        getOptionLabel={(option) => {
-          if (typeof option === 'string') {
-            return option;
-          }
-          if (option.inputValue) {
-            return option.inputValue;
-          }
-          return option.name;
-        }}
-        freeSolo={true}
-        filterOptions={filter_options}
-        clearOnBlur={true}
-        renderInput={(params) => <TextField {...params} label={t('piece')} />}
-        renderOption={(props, option) => (
-          <Box component="li"  {...props}>
-            <Typography sx={{paddingRight: 1}} >{option.name}</Typography>
-            <StarIcon fontSize="small" color="primary" />
-            {calculateAverageRating(option.notes)}
-          </Box>
+    <Container maxWidth="md">
+      <Box mt={4}>
+        {mode === 'create' && (
+          <Paper elevation={3} sx={{ background: 'red', color: 'white', padding: '1rem', marginBottom: '1rem' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              {t('admin notion')}
+            </Typography>
+          </Paper>
         )}
-
-
-      />
-    <Box sx={{ minWidth: 120}}>
-
-     <InputLabel id="group_label">{t('group')}</InputLabel>
-      <Select
-      required={true}
-      labelId="group_label"
-      id="group"
-      value={group}
-      onChange={handleGroupChange}
-      label={t('group')}
-      sx={{ width: '100%',}}
-      >
-      {groups.map((group)=><MenuItem value={t(group)}> {t(group)} </MenuItem>)}
-    </Select>
-    </Box>
-
-      <Autocomplete
-        options={tags}
-        onChange={handleAutocompleteChange}
-        freeSolo={true}
-        clearOnBlur={true}
-        renderInput={(params) => <TextField {...params} label={t('tags')} />}
-      />
-
-      <div style={{ marginTop: "0.5rem" }}>
-        {selectedTags.map((tag) => (
-          <Chip
-            key={tag}
-            label={tag}
-            onDelete={() => {
-              setSelectedTags(selectedTags.filter((t) => t !== tag));
-            }}
-            style={{ marginRight: "5px" }}
-          />
-        ))}
-      </div>
-
-      <TextareaAutosize
-        required={true}
-        minRows={5}
-        maxRows={10}
-        placeholder={t('review text')}
-        style={{ width: "100%", marginTop: "1rem" }}
-        value={reviewText}
-        onChange={(e) => setReviewText(e.target.value)}
-      />
-
-      <div style={{ marginTop: "1rem" }}>
-        <p>{t('my rating')}</p>
-        <Rating
-          name="author-rating"
-          value={authorRating}
-          max={10}
-          onChange={(event, newValue) => setAuthorRating(newValue)}
-        />
-      </div>
-
-      <div style={{ marginTop: "1rem" }}>
-        <p>{t('img text')}</p>
-        <FileUploader handleChange={handleChange} name="file" types={fileTypes}>
-          {file && (
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <img
-                src={URL.createObjectURL(file)}
-                alt="Uploaded"
-                style={{ maxWidth: "800px", maxHeight: "600px", marginRight: "1rem" }}
-              />
-              <DeleteIcon
-                color="secondary"
-                fontSize="large"
-                onClick={() => setFile(null)}
-              />
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              label={t('review name')}
+              required
+              fullWidth
+              margin="normal"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Autocomplete
+              options={pieces}
+              onChange={handlePiece}
+              value={piece}
+              getOptionLabel={(option) => {
+                if (typeof option === 'string') {
+                  return option;
+                }
+                if (option.inputValue) {
+                  return option.inputValue;
+                }
+                return option.name;
+              }}
+              freeSolo
+              filterOptions={filter_options}
+              clearOnBlur
+              renderInput={(params) => <TextField {...params} label={t('piece')} />}
+              renderOption={(props, option) => (
+                <Box component="li" {...props}>
+                  <Typography sx={{ paddingRight: 1 }}>{option.name}</Typography>
+                  <StarIcon fontSize="small" color="primary" />
+                  {calculateAverageRating(option.notes)}
+                </Box>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth required>
+              <InputLabel id="group_label">{t('group')}</InputLabel>
+              <Select
+                labelId="group_label"
+                id="group"
+                value={group}
+                onChange={handleGroupChange}
+                label={t('group')}
+              >
+                {groups.map((group) => (
+                  <MenuItem key={group} value={t(group)}>
+                    {t(group)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <Autocomplete
+              options={tags}
+              onChange={handleAutocompleteChange}
+              freeSolo
+              clearOnBlur
+              renderInput={(params) => <TextField {...params} label={t('tags')} />}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <div style={{ marginTop: '0.5rem' }}>
+              {selectedTags.map((tag) => (
+                <Chip
+                  key={tag}
+                  label={tag}
+                  onDelete={() => {
+                    setSelectedTags(selectedTags.filter((t) => t !== tag));
+                  }}
+                  style={{ marginRight: '5px' }}
+                />
+              ))}
             </div>
-          )}
-        </FileUploader>
-      </div>
+          </Grid>
+          <Grid item xs={12}>
+          <InputLabel>{t('review text')}</InputLabel>
 
-      <Button
-        variant="contained"
-        disabled={piece === ''}
-        color="primary"
-        sx={{marginBottom: 2, marginTop: 2}}
-        onClick={handleSubmit}
-      >
-        {mode}
-      </Button>
-    </div>
+            <TextareaAutosize
+              required
+              minRows={5}
+              maxRows={10}
+              placeholder={t('review text')}
+              style={{ width: '100%', marginTop: '1rem' }}
+              value={reviewText}
+              onChange={(e) => setReviewText(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <div style={{ marginTop: '1rem' }}>
+              <p>{t('my rating')}</p>
+              <Rating name="author-rating" value={authorRating} max={10} onChange={(event, newValue) => setAuthorRating(newValue)} />
+            </div>
+          </Grid>
+          <Grid item xs={12}>
+            <div style={{ marginTop: '1rem' }}>
+              <p>{t('img text')}</p>
+              <FileUploader handleChange={handleChange} name="file" types={fileTypes}>
+                {file && (
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt="Uploaded"
+                      style={{ maxWidth: '800px', maxHeight: '600px', marginRight: '1rem' }}
+                    />
+                    <DeleteIcon color="secondary" fontSize="large" onClick={() => setFile(null)} />
+                  </div>
+                )}
+              </FileUploader>
+            </div>
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" disabled={!piece} color="primary" onClick={handleSubmit}>
+              {mode}
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+    </Container>
   );
 };
 

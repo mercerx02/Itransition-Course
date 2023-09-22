@@ -1,15 +1,11 @@
-import StarIcon from '@mui/icons-material/Star';
-import { Box, Typography, Select, MenuItem,} from '@mui/material';
+import { Box, Typography, Grid} from '@mui/material';
 import { useEffect, useState } from 'react';
-import { ListItemIcon } from '@mui/material';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { calculateAverageRating } from '../services/calculateAvgRating';
 import ReviewCard from './ReviewCard';
 import { useTranslation } from "react-i18next";
 import CircularProgress from '@mui/material/CircularProgress';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-
+import Divider from '@mui/material/Divider';
+import SortReviews from './SortReviews';
 
 const Reviews = ({reviews, user, setReviews, startIndex, endIndex, searchResults, reviews_name}) => {
   const [sortBy, setSortBy] = useState('date');
@@ -53,71 +49,53 @@ const Reviews = ({reviews, user, setReviews, startIndex, endIndex, searchResults
 
       return (
         <>
- <Box maxWidth={1000} sx={{ paddingLeft: 3, paddingRight: 25 }}>
-  <Typography variant="h3" mb={2}>
-    {reviews_name}
-  </Typography>
-  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-    <Box sx={{ padding: 2 }}>
-      <Select
-        label="Сортировать по"
-        value={sortBy}
-        onChange={(e) => setSortBy(e.target.value)}
-      >
-        <MenuItem value="date">
-          <ListItemIcon>
-            <CalendarTodayIcon fontSize="small" />
-          </ListItemIcon>
-          {t('recent')}
-        </MenuItem>
-        <MenuItem value="averageRating">
-          <ListItemIcon>
-            <StarIcon fontSize="small" />
-          </ListItemIcon>
-          {t('by_avg_rating')}
-        </MenuItem>
-        <MenuItem value="likes">
-          <ListItemIcon>
-            <ThumbUpIcon fontSize="small" />
-          </ListItemIcon>
-          {t('likes')}
-        </MenuItem>
-        {user &&
-        <MenuItem value="myLikedPosts">
-        <ListItemIcon>
-          <FavoriteIcon fontSize="small" />
-        </ListItemIcon>
-        {t('liked_reviews')}
-      </MenuItem>
-      }
-      </Select>
-    </Box>
-  </Box>
+ <Box maxWidth='100%' sx={{ paddingLeft: 3, paddingRight: 20 }}>
+  <SortReviews user={user} setSortBy={setSortBy} sortBy={sortBy}></SortReviews>
+  <Divider sx={{ marginBottom: 2}}></Divider>
+  <Grid container spacing={50}>
+
       {showNoReviews ? (
-        <Typography sx={{padding:5, paddingRight:50}} variant="h2" mt={4}>
+        <Grid item key='no reviews' xs={12} sm={6} md={4} lg={3}>
+
+        <Box sx={{ p: 10,paddingLeft:20, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <Typography Typography variant="h2" mt={4}>
           {t('no_reviews')}
         </Typography>
+        </Box>
+        </Grid>
+
       ) : reviews.length === 0 ? (
-        <Box sx={{ display: 'flex', padding: 10, paddingRight: 60 }}>
+        <Grid item key='progress' xs={12} sm={6} md={4} lg={3}>
+
+        <Box sx={{ p: 10, paddingLeft: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           <CircularProgress size={80} />
         </Box>
+        </Grid>
+
       ) : (
+
         searchResults.length > 0 ? (
           searchResults.map((review) => (
+            <Grid item key={review._id} xs={12} sm={6} md={4} lg={3}>
             <ReviewCard key={review._id} setReviews={setReviews} reviews={reviews} review={review} user={user} />
+            </Grid>
+
           ))
         ) : (
           sortReviews()
             .slice(startIndex, endIndex)
             .map((review) => (
+              <Grid item key={review._id} xs={12} sm={6} md={4} lg={3}>
               <ReviewCard key={review._id} setReviews={setReviews} reviews={reviews} review={review} user={user} />
+              </Grid>
             ))
         )
+
       )}
+      </Grid>
       </Box>
         </>
       );
-
 }
 
 export default Reviews

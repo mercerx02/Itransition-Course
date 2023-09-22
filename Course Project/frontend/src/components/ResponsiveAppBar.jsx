@@ -109,7 +109,7 @@ const ResponsiveAppBar = ({ user, searchInput, setSearchInput , reviews, setSear
   }
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <ReviewsIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />

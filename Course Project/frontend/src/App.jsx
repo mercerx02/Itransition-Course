@@ -14,10 +14,11 @@ import AdminPage from "./pages/AdminPage";
 import FilterPage from "./pages/FilterPage";
 import SecureUser from "./components/SecureUser";
 import SecureAdminPage from "./components/SecureAdminPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import SecureEditReview from "./components/SecureEditReview";
 import { getReviews } from "./services/reviewsService";
 import { getMe } from "./services/usersService";
-
+import Footer from "./components/Footer";
 
 export const ColorModeContext = createContext({
   toggleColorMode: () => {},
@@ -34,7 +35,7 @@ function App({BACKEND_URL, CLIENT_URL}) {
   })
   const [user, setUser] = useState(null)
   const [reviews, setReviews] = useState([])
-  const itemsPerPage = 4;
+  const itemsPerPage = 3;
   const [page, setPage] = useState(1);
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -112,9 +113,10 @@ function App({BACKEND_URL, CLIENT_URL}) {
           <Route index element={<AdminPage></AdminPage>}></Route>
         </Route>
         <Route path="/reviews/tags/:tag" element={<FilterPage searchResults={searchResults} setPage={setPage} endIndex={endIndex} startIndex={startIndex} page={page} itemsPerPage={itemsPerPage} user={user}></FilterPage>}></Route>
-
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
+    <Footer></Footer>
     </ThemeProvider>
     </ColorModeContext.Provider>
 

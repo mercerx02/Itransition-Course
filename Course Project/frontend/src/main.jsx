@@ -52,7 +52,12 @@ i18n
           'other':'Other',
           'liked_reviews':'By liked reviews',
           'no_reviews':'No reviews ):',
-          'my_reviews':'My reviews'
+          'my_reviews':'My reviews',
+          'logo text':'Share, Explore, Inspired',
+          'fetch reviews':'Fetching reviews. It may takes a time...',
+          'descr1': 'This platform is designed for sharing various discussions and topics related to books',
+          'descr2':'movies, or news. Inspire people every day '
+
 
         }
       },
@@ -95,7 +100,12 @@ i18n
           'delete_success':'Обзор был удален успешно!',
           'liked_reviews':'Понравившееся обзоры',
           'no_reviews':'Обзоров нет ):',
-          'my_reviews':'Мои обзоры'
+          'my_reviews':'Мои обзоры',
+          'logo text':'Делитесь, Узнавайте, Вдохновляйтесь',
+          'fetch reviews':'Загружаем обзоры. Это может занять некоторое время...',
+          'descr1': 'Эта платформа предназначена для обмена различными дискуссиями и темами, связанными с книгами,',
+          'descr2':'фильмами или новостями. Вдохновляйте людей каждый день!'
+
 
 
         }

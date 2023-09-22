@@ -41,14 +41,16 @@ const TagCloudComponent = () => {
   },[])
   return (
     <>
-    <Box sx={{ paddingTop: 20 }} flexGrow={1} ml={2}>
-            <Typography variant="h5" mb={2}>
+    <Box sx={{ paddingTop: 10 }} justifyContent='center' flexGrow={1} ml={2}>
+            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+            <Typography variant="h4" mb={2}>
             {t('trends')}
             </Typography>
+            </Box>
             <TagCloud
             tags={tags}
             shuffle={true}
-            minSize={15}
+            minSize={20}
             maxSize={30}
             renderer={customRenderer}
 

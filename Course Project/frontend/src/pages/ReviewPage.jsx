@@ -19,6 +19,10 @@ import { useParams } from 'react-router-dom';
 import { submitComment } from '../services/commentService';
 import { usePDF } from 'react-to-pdf';
 import { getComments } from '../services/commentService';
+import { calculateAverageRating } from '../services/calculateAvgRating';
+import StarIcon from '@mui/icons-material/Star';
+import { ratePiece } from '../services/pieceService';
+import { PeopleAltOutlined } from '@mui/icons-material';
 
 const ReviewPage = ({user, setReviews, reviews, setAlertMessage, setOpenAlert, adminMode}) => {
   const { id } = useParams()
@@ -26,7 +30,7 @@ const ReviewPage = ({user, setReviews, reviews, setAlertMessage, setOpenAlert, a
   const [newComment, setNewComment] = useState('');
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
-  const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
+  const { toPDF, targetRef } = usePDF({filename: `review_${id}.pdf`});
   const [comments, setComments] = useState([])
 
   useEffect(()=>{
@@ -71,6 +75,18 @@ const handleOpenDialog = () =>{
     }
   };
 
+  const handleUserRatingChange = async (reviewId, newValue) => {
+    try {
+      const updatedReview = await ratePiece(reviewId, newValue)
+      setReview(updatedReview)
+      setReviews(reviews.map((review)=>{
+        return review._id === updatedReview._id ? updatedReview : review
+      }))
+    } catch (error) {
+
+    }
+
+  };
 
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: 20 }}>
@@ -127,13 +143,26 @@ const handleOpenDialog = () =>{
               marginBottom: 20,
             }}
           >
+        <Box display="flex" alignItems="center" mt={1}>
+        <Typography
+        sx={{
+        }}
+
+        >{t('piece')}: {review.piece.name}</Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', ml: 1 }}>
             <Rating
-              name="authorRating"
-              precision={0.5}
-              value={review.author_note}
-              readOnly
-              max={10}
+                name={`user-rating-${review._id}`}
+                value={calculateAverageRating(review.piece.notes)}
+                readOnly={!user}
+                precision={0.5}
+                onChange={(event, newValue) => handleUserRatingChange(review._id, newValue)}
             />
+            <Typography>{calculateAverageRating(review.piece.notes)}</Typography>
+            <StarIcon fontSize="small" color="primary"></StarIcon>
+            <PeopleAltOutlined fontSize="small" style={{ marginLeft: 5 }} />
+            <Typography variant="body2">{review.piece.notes.length}</Typography>
+          </Box>
+        </Box>
             <Typography
               variant="body1"
               color="textSecondary"
